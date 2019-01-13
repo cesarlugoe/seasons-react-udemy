@@ -1,19 +1,16 @@
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import SeasonDisplay from './SeasonDisplay';
+import Loader from './Loader';
 
 export default class App extends Component {
 
    state = {
-      isLoading: true,
       userLatitude: null,
       errorMessage: ''
    }
 
    componentDidMount() {
-      this.setState({
-         isLoading: false,
-      });
       this.getUserLatitude()
    }
 
@@ -25,15 +22,17 @@ export default class App extends Component {
    }
 
   render() {
-     const { isLoading, userLatitude, errorMessage } = this.state;
+     const { userLatitude, errorMessage } = this.state;
    
-    return (
-      <div>
-         {isLoading?  <h1>...Loading</h1> : null}
-         { (errorMessage && !userLatitude)? <h1> Error: { errorMessage }</h1> : null }
-         { (!errorMessage && userLatitude)? <SeasonDisplay userLatitude={userLatitude}/> : null }
-      </div>
-    )
+      if (errorMessage && !userLatitude) {
+         return <div> Error: { errorMessage }</div>;
+      }
+
+      if (!errorMessage && userLatitude) {
+         return <SeasonDisplay userLatitude={userLatitude}/> 
+      }
+
+      return < Loader message="Please, accept location request" />;
   };
 }
 
