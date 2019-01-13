@@ -21,19 +21,29 @@ export default class App extends Component {
       );
    }
 
-  render() {
-     const { userLatitude, errorMessage } = this.state;
+   renderContent() {
+      const { userLatitude, errorMessage } = this.state;
    
       if (errorMessage && !userLatitude) {
          return <div> Error: { errorMessage }</div>;
       }
 
       if (!errorMessage && userLatitude) {
-         return <SeasonDisplay userLatitude={userLatitude}/> 
+         return <SeasonDisplay userLatitude={userLatitude}/>; 
       }
 
-      return < Loader message="Please, accept location request" />;
-  };
+      return <Loader message="Please, accept location request" />;
+  }
+
+
+  render() {
+     return (
+        <div className="border red">
+            {this.renderContent()}
+        </div>
+     );
+   }
+
 }
 
 
