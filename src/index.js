@@ -1,51 +1,23 @@
 import ReactDOM from 'react-dom';
-import React, { Component } from 'react';
+import React from 'react';
 import SeasonDisplay from './SeasonDisplay';
 import Loader from './Loader';
+import useLocation from './useLocation';
 
-export default class App extends Component {
+const App = () => {
+   const [errorMessage, userLatitude] = useLocation();
 
-   state = {
-      userLatitude: null,
-      errorMessage: ''
+   let content;
+   if (errorMessage) {
+      content = <div>Error: {errorMessage}</div>;
+   } else if (userLatitude) {
+      content = <SeasonDisplay userLatitude={userLatitude}/>;
+   } else {
+      content = <Loader message="Please, accept location request" />;
    }
 
-   componentDidMount() {
-      this.getUserLatitude()
-   }
-
-   getUserLatitude() {
-      window.navigator.geolocation.getCurrentPosition(
-         position => this.setState({ userLatitude: position.coords.latitude }),
-         err => this.setState({ errorMessage: err.message })  
-      );
-   }
-
-   renderContent() {
-      const { userLatitude, errorMessage } = this.state;
-   
-      if (errorMessage && !userLatitude) {
-         return <div> Error: { errorMessage }</div>;
-      }
-
-      if (!errorMessage && userLatitude) {
-         return <SeasonDisplay userLatitude={userLatitude}/>; 
-      }
-
-      return <Loader message="Please, accept location request" />;
-  }
-
-
-  render() {
-     return (
-        <div className="border red">
-            {this.renderContent()}
-        </div>
-     );
-   }
-
-}
-
+   return <div className="border red">{content}</div>;
+};
 
 ReactDOM.render(
    <App />, 
